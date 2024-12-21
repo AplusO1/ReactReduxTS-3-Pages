@@ -1,7 +1,9 @@
-.App {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+.loader {
+  font-size: 1.5rem;
+  color: #007bff;
+}
+
+.error {
+  font-size: 1.5rem;
+  color: #dc3545;
 }

@@ -1,14 +1,19 @@
+.todo {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 .title {
-  margin: 20px;
   font-size: 56px;
   text-transform: uppercase;
-  display: flex;
-  justify-content: center;
+  align-self: center;
 }
 
 .todoList {
-  list-style: none;
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .todoList li {
@@ -17,19 +22,18 @@
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  margin-bottom: 10px;
   background-color: #f9f9f9;
   transition: background-color 0.3s;
   justify-content: space-between;
 }
 
-.todoCheckbox {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
+
+.todoList li:hover {
+  background-color: #f0f0f0;
 }
 
 .button {
+  align-self: center;
   width: 100px;
   height: 50px;
   border: none;
@@ -50,16 +54,11 @@
   color: #000;
 }
 
-.is-done {
-  opacity: 0.5;
-}
-
 .buttonList {
   display: flex;
   justify-content: space-between;
-  margin: 10px;
 }
 
-.todoList li:hover {
-  background-color: #f0f0f0;
+.buttonList > button {
+  width: 150px;
 }

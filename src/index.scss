@@ -1,18 +1,49 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+li,
+blockquote,
+fieldset {
+  margin: 0;
+  padding: 0;
+}
+ul,
+ol {
+  list-style: none;
+}
+img {
+  width: 100%;
+}
+
+body {
+  font-family: "OpenSans", sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+}
+
 @font-face {
-  font-family: 'OpenSans';
+  font-family: "OpenSans";
   font-style: normal;
   font-weight: 700;
   src: url("./assets/fonts/OpenSans-Bold.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: 'OpenSans';
+  font-family: "OpenSans";
   font-style: normal;
   font-weight: 400;
   src: url("./assets/fonts/OpenSans-Regular.woff2") format("woff2");
-}
-
-html,
-body {
-  font-family: 'OpenSans', sans-serif;
 }

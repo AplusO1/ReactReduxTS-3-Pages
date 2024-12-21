@@ -1,3 +1,4 @@
+import { BrowserRouter } from "react-router-dom";
 import { createRoot } from "react-dom/client";
 import "./index.scss";
 import { StrictMode } from "react";
@@ -11,7 +12,9 @@ const root = createRoot(domNode);
 root.render(
   <StrictMode>
     <Provider store={store}>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </Provider>
-  </StrictMode>
+  </StrictMode>,
 );

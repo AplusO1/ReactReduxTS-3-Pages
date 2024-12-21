@@ -1,59 +1,124 @@
-import styles from './app.module.scss';
-import { ToDoList, TaskType } from '../ToDoList/Todolist';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../state/store';
-import { removeTask, addTask, changeTaskStatus, changeTaskTitle } from '../../slices/tasksSlice';
-import { changeState, FilterValuesType } from '../../slices/filterSlice';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useMemo } from "react";
+import { Routes, Route } from "react-router-dom";
+import styles from "./app.module.scss";
+import { ToDoList } from "../ToDoList/Todolist";
+import { TaskDetails } from "../TaskDetails/TaskDetails";
+import { AddTask } from "../AddTask/AddTask";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
+import { AppDispatch, RootState } from "../../state/store";
+import {
+  removeTask,
+  addTask,
+  changeTaskStatus,
+  changeTaskTitle,
+  fetchTasks,
+  FilterValuesType,
+  setFilter,
+} from "../../slices/tasksSlice";
 
 export const App = () => {
-    const dispatch = useDispatch();
-    const tasks = useSelector<RootState, Array<TaskType>>(state => state.tasks);
-    const filter = useSelector<RootState, FilterValuesType>(state => state.filters.checked);
+  const dispatch = useDispatch<AppDispatch>();
+  const filter = useSelector<RootState, FilterValuesType>(
+    (state) => state.tasks.filter,
+  );
+  const { tasks, loading, error } = useSelector(
+    (state: RootState) => ({
+      tasks: state.tasks.tasks,
+      loading: state.tasks.loading,
+      error: state.tasks.error,
+    }),
+    shallowEqual,
+  );
 
-    const tasksForTodolist = useCallback(() => {
-        switch (filter) {
-          case "active":
-            return tasks.filter((task) => !task.isDone);
-          case "completed":
-            return tasks.filter((task) => task.isDone);
-          default:
-            return tasks;
-        }
-      }, [filter, tasks]);
+  useEffect(() => {
+    dispatch(fetchTasks());
+  }, [dispatch]);
 
-    function changeFilter(value: FilterValuesType) {
-        dispatch(changeState(value));
+  const tasksForTodolist = useMemo(() => {
+    switch (filter) {
+      case "active":
+        return tasks.filter((task) => !task.completed);
+      case "completed":
+        return tasks.filter((task) => task.completed);
+      default:
+        return tasks;
     }
+  }, [filter, tasks]);
 
-    function removeTaskHandler(id: string) {
-        dispatch(removeTask(id));
-    }
+  const changeFilter = useCallback(
+    (value: FilterValuesType) => {
+      dispatch(setFilter(value));
+    },
+    [dispatch],
+  );
 
-    function addTaskHandler(title: string) {
-        dispatch(addTask(title));
-    }
+  const removeTaskHandler = useCallback(
+    (id: string) => {
+      dispatch(removeTask(id));
+    },
+    [dispatch],
+  );
 
-    function changeStatusHandler(taskId: string, isDone: boolean) {
-        dispatch(changeTaskStatus({ id: taskId, isDone }));
-    }
+  const addTaskHandler = useCallback(
+    (title: string) => {
+      dispatch(addTask(title));
+    },
+    [dispatch],
+  );
 
-    function changeTaskTitleHandler(taskId: string, newTitle: string) {
-        dispatch(changeTaskTitle({ id: taskId, title: newTitle }));
-    }
+  const changeStatusHandler = useCallback(
+    (taskId: string, completed: boolean) => {
+      dispatch(changeTaskStatus({ id: taskId, completed }));
+    },
+    [dispatch],
+  );
 
-    return (
-        <div className={styles.App}>
-            <ToDoList 
-                title={"todos"}
-                tasks={tasksForTodolist()}
-                removeTask={removeTaskHandler}
-                changeFilter={changeFilter}
-                addTask={addTaskHandler}
-                changeTaskStatus={changeStatusHandler}
-                changeTaskTitle={changeTaskTitleHandler}
-                filter={filter}
+  const changeTaskTitleHandler = useCallback(
+    (taskId: string, newTitle: string) => {
+      dispatch(changeTaskTitle({ id: taskId, title: newTitle }));
+    },
+    [dispatch],
+  );
+
+  if (loading) {
+    return <div className={styles.loader}>Loading...</div>;
+  }
+
+  if (error) {
+    return <div className={styles.error}>Error: {error}</div>;
+  }
+
+  return (
+    <div className={styles.App}>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <ToDoList
+              title={"todos"}
+              tasks={tasksForTodolist}
+              removeTask={removeTaskHandler}
+              changeFilter={changeFilter}
+              changeTaskStatus={changeStatusHandler}
+              changeTaskTitle={changeTaskTitleHandler}
+              filter={filter}
             />
-        </div>
-    );
+          }
+        />
+        <Route
+          path="/tasks/:id"
+          element={
+            <TaskDetails
+              changeTaskTitle={changeTaskTitleHandler}
+              changeTaskStatus={changeStatusHandler}
+            />
+          }
+        />
+        <Route
+          path="/add-task"
+          element={<AddTask addTask={addTaskHandler} />}
+        />
+      </Routes>
+    </div>
+  );
 };
