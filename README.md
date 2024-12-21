@@ -8,7 +8,7 @@
 
 ### Инструкция по запуску
 - Создайте папку для проекта и перейдите в неё.
-- Склонируйте репозиторий `git clone git@github.com:AplusO1/ReactReduxTS-3-Pages-.git`
+- Склонируйте репозиторий `git clone git@github.com:AplusO1/ReactReduxTS-3-Pages.git`
 - Установите зависимости `npm install`
 - Запускайте проект `npm run dev`
 - Запустить линтер `npm run lint`
